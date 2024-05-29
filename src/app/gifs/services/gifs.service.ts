@@ -5,16 +5,36 @@ export class GifsService {
 
   private _tagsHistory: string[] = [];
 
+  private apiKey: string = 'X2DEViQgtTJwnVHroC2vmOGpsz4jqUHq';
+
   constructor() { }
 
   get tagsHistory() {
     return [...this._tagsHistory];
   }
 
-  searchTag(tag: string): void {
-    this._tagsHistory.unshift(tag);
+  private organizeHistory(tag: string){
+    tag = tag.toLowerCase();
 
-    console.log(this._tagsHistory);
+    if( this._tagsHistory.includes(tag) ){
+      this._tagsHistory = this._tagsHistory.filter( (oldTag) => oldTag !== tag )
+    }
+
+    this._tagsHistory.unshift( tag );
+
+    this._tagsHistory = this._tagsHistory.splice(0,10)
+
+  }
+
+  searchTag(tag: string): void {
+
+    if( tag.length == 0 ) return;
+
+    this.organizeHistory( tag );
+
+    //this._tagsHistory.unshift( tag );
+
+    //console.log(this._tagsHistory);
   }
 
 }
