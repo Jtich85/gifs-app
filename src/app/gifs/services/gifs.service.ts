@@ -1,3 +1,4 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({providedIn: 'root'})
@@ -7,7 +8,9 @@ export class GifsService {
 
   private apiKey: string = 'X2DEViQgtTJwnVHroC2vmOGpsz4jqUHq';
 
-  constructor() { }
+  private serviceUrl: string = 'https://api.giphy.com/v1/gifs';
+
+  constructor( private http: HttpClient ) { }
 
   get tagsHistory() {
     return [...this._tagsHistory];
@@ -26,15 +29,35 @@ export class GifsService {
 
   }
 
-  searchTag(tag: string): void {
+   searchTag(tag: string): void {
 
     if( tag.length == 0 ) return;
 
     this.organizeHistory( tag );
 
-    //this._tagsHistory.unshift( tag );
+    const params = new HttpParams()
+      .set('api_key', this.apiKey)
+      .set('limit', 10)
+      .set('q', tag)
 
-    //console.log(this._tagsHistory);
+    this.http.get(`${ this.serviceUrl }/search`, { params })
+      .subscribe( resp => {
+
+        console.log(resp);
+
+      } )
+
+
+    /* async searchTag(tag: string): Promise<void> { */
+
+
+    /* fetch('http://api.giphy.com/v1/gifs/search?api_key=X2DEViQgtTJwnVHroC2vmOGpsz4jqUHq&q=Valorant&limit=10')
+      .then( resp => resp.json() )
+      .then( data => console.log(data) ) */
+
+    /* const resp = await fetch('http://api.giphy.com/v1/gifs/search?api_key=X2DEViQgtTJwnVHroC2vmOGpsz4jqUHq&q=Valorant&limit=10')
+    const data = await resp.json();
+    console.log(data); */
   }
 
 }
